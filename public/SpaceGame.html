@@ -20,7 +20,6 @@
         uniform vec4 thrusterPosition;
         uniform float shininess;
 
-        //flat out vec4 t_color;
         out vec4 v_color;
         out vec2 v_texCoord;
 
@@ -28,25 +27,17 @@
             v_color = a_color;
             v_texCoord = a_texCoord;
 
-            // Transform vertex position into eye coordinates
             vec3 pos = -(u_modelViewMatrix * a_coords).xyz;
             
-            // Light is part of the model
             vec3 light = (u_modelViewMatrix * lightPosition).xyz;
             vec3 thruster = (u_modelViewMatrix * thrusterPosition).xyz;
 
-            // Normalized vector from pos to light
             vec3 L = normalize( light - pos );
-
             vec3 E = normalize( -pos );
             vec3 H = normalize( L + E );
-            
             vec4 NN = vec4(a_normals,0);
-
-            // Transform vertex normal into eye coordinates
             vec3 N = normalize( (u_modelViewMatrix*NN).xyz);
 
-            // Compute terms in the illumination equation
             vec4 ambient = ambientProduct;
 
             float Kd = max( dot(L, N), 0.0 );
@@ -59,7 +50,6 @@
                 specular = vec4(0.0, 0.0, 0.0, 1.0);
             } 
 
-            // thruster
             vec3 Lt = normalize( thruster - pos );
             vec4  thrusterDiffuse = max( dot(Lt, N), 0.0 ) * vec4(0.0, 0.0, 1.0, 1.0);
 

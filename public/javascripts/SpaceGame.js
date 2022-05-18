@@ -81,12 +81,6 @@ const finishLineMesh = {
 	texcoord: finishLine.vertices[3].values
 };
 
-// questions to answer:
-//   - does the rival spaceship's speed change (random speed throughout)?
-//   - how does your spaceship's speed change?
-//   - can you move around planets and other objects?
-//   - how is the race path determined?
-
 function init() {
 	document.onkeydown = function (ev) {
 		if (ev.code === "Space") {
@@ -424,7 +418,7 @@ function draw() {
 	if (input[1] == 1) { tilt(3); }
 	else if (input[1] == -1) { tilt(-3); }
 
-	modelViewMatrix = lookAtGT(eye, vec3(0, 0, 1), up);//modified lookAtGT to remove at
+	modelViewMatrix = lookAt(eye, vec3(0, 0, 1), up);
 
 	objects.forEach((obj) => {
 		gl.uniform1f(gl.getUniformLocation(program, "textured"), obj.textured);

@@ -10,6 +10,7 @@ let  modelTransform;
 let colorLocation;
 
 let stars = [];
+let starCoords = [];
 
 const SPEED = 0.02;
 const R_SPEED = 3;
@@ -19,11 +20,13 @@ const MAX_SIZE = 0.2;
 let perClick = 1;
 let pause = false;
 
+let canvas;
+
 //Initialize the program
 function init() {
 
 	//Get graphics context
-    let canvas = document.getElementById( "gl-canvas" );
+    canvas = document.getElementById( "gl-canvas" );
 	let  options = {  
 		alpha: false,
 		depth: false
@@ -43,33 +46,20 @@ function init() {
 
     // create coordinates of a star
     let  t;
-    let starCoords = [];
     for(let i = 0; i <= 10; i++){
         t = (2 * Math.PI * i)/10;
-        if (i%2)
-            starCoords[i] = [Math.cos(t), Math.sin(t)];
-        else 
-            starCoords[i] = [Math.cos(t)/2, Math.sin(t)/2];
+        if (i%2) starCoords[i] = [Math.cos(t), Math.sin(t)];
+        else starCoords[i] = [Math.cos(t)/2, Math.sin(t)/2];
     }
 
+    // create a new star at mouse click location
+    let x,y;
     canvas.addEventListener("click", function(event){
         for (let t = 0; t < perClick; t++){
-            // convert coordinates
             let rect = event.target.getBoundingClientRect();
-            let x = -1+(2*(event.clientX-rect.left)/canvas.width);
-            let y = -1+2*((canvas.height-(event.clientY-rect.top))/canvas.height);
-
-            // create star and add to stars array
-            let size = ((Math.random()*MAX_SIZE*100)+MIN_SIZE*100)/100;
-            const star = {
-                modelTransform: mult(translate(x,y,0.0), 
-                            mult(scalem(size, size, 0),mat4())),
-                color:     [Math.random(), Math.random(), Math.random()],
-                coords:    starCoords,
-                direction: Math.random()*2*Math.PI,
-                centroid:  function() {return getCentroid(star.coords)}
-            }
-            stars.push(star); 
+            x = -1+(2*(event.clientX-rect.left)/canvas.width);
+            y = -1+2*((canvas.height-(event.clientY-rect.top))/canvas.height);
+            newStar(x, y);
         } 
     });
 
@@ -79,14 +69,32 @@ function init() {
     gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0); 
     gl.enableVertexAttribArray(attributeCoords); 
 
-    //set up screen
+    // set up screen
     gl.viewport(0, 0, window.innerWidth, window.innerHeight); 
     gl.clearColor(0,0,0,1); 
 
     gl.canvas.width  = window.innerWidth;
     gl.canvas.height = window.innerHeight;
 
+    // starting stars
+    for (let t = 0; t < 4; t++)
+        newStar(0, 0);
+
     draw();
+}
+
+// create star and add to stars array
+function newStar(x, y) {
+    let size = ((Math.random()*MAX_SIZE*100)+MIN_SIZE*100)/100;
+    const star = {
+        modelTransform: mult(translate(x,y,0.0), 
+                    mult(scalem(size, size, 0),mat4())),
+        color:     [Math.random(), Math.random(), Math.random()],
+        coords:    starCoords,
+        direction: Math.random()*2*Math.PI,
+        centroid:  function() {return getCentroid(star.coords)}
+    }
+    stars.push(star); 
 }
 
 // Draws the contents of the canvas

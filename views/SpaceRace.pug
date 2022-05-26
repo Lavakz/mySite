@@ -72,12 +72,13 @@ html
   body(onload='init();')
     #container
       h1 Space Race
+      button( type='button' onclick= "location.href='/'" ) Back to Home Page
       #second-container
         #instructions
-          p w: tilt up
-          p a: tilt left
-          p s: tilt down
-          p d: tilt right
+          p W: tilt up
+          p A: roll left
+          p S: tilt down
+          p D: roll right
         #canvas-timer
           p#timer(hidden='') 00:00
           canvas#gl-canvas(width='650' height='650')

@@ -10,22 +10,7 @@ body {
     display: flex;
     align-items: center;
     font-family: 'Space Mono', monospace;
-}
 
-h1 {
-    position: absolute;
-    margin: 20px 0;
-    padding: 20px;
-    text-align: center;
-    font-size: 60px;
-    color: white;
-}
-
-button {
-    position: absolute;
-}
-
-#container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,3 +18,34 @@ button {
     margin: 0 auto;
 }
 
+#overCanvas {
+    text-align: center;
+    position: absolute;
+}
+
+#greeting {
+    padding: 50px;
+}
+
+h1 {
+    font-size: 80px;
+    color: white;
+}
+
+p {
+    font-size: 18px;
+    color: white;
+}
+
+h2 {
+    margin: 15px;
+    padding: 15px;
+    font-size: 40px;
+    color: white;
+}
+
+button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 20px;
+}

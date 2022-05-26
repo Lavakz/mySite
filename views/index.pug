@@ -25,8 +25,14 @@ html
     script(type='text/javascript' src='javascripts/utils.js')
     script(type='text/javascript' src='javascripts/Stars.js')
   body(onload='init();' style='width:100%;height:100%;margin:0;')
-    #container
-      canvas#gl-canvas
-        | your browser doesn't support the HTML5 canvas element
-      h1 Welcome!
-      button( type='button' onclick= "location.href='/SpaceRace'" ) Go to Space Race
+    canvas#gl-canvas
+      | your browser doesn't support the HTML5 canvas element
+    #overCanvas
+      #greeting
+        h1 Welcome!
+        p Click to add stars
+
+      h2 My Projects:
+      button( type='button' onclick= "location.href='/SpaceRace'" ) Space Race
+      br 
+      button( type='button' onclick= "location.href='https://www.youtube.com/channel/UCsBV3-0sI4AP4dj1-HwTsJQ'" ) Youtube Channel

@@ -1,0 +1,104 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Space Race
+    script(type='text/javascript' src='javascripts/objects/Spaceship.js')
+    script(type='text/javascript' src='javascripts/objects/ring.js')
+    script(type='text/javascript' src='javascripts/objects/finish-line.js')
+    script(type='text/javascript' src='javascripts/utils.js')
+    script(type='text/javascript' src='javascripts/SpaceGame.js')
+    script(type='text/javascript' src='javascripts/shapes.js')
+    link(rel='stylesheet' href='stylesheets/style.css')
+    link(rel='preconnect' href='https://fonts.googleapis.com')
+    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+    link(href='https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap' rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css2?family=PT+Mono&display=swap' rel='stylesheet')
+    // Begin GLSL 3.0 Shader code
+    script#vertex-shader(type='x-shader/x-vertex').
+      #version 300 es
+      in vec4 a_coords;
+      in vec3 a_normals;
+      in vec4 a_color;
+      in vec2 a_texCoord;
+      uniform mat4 u_modelViewMatrix;
+      uniform mat4 u_projectionMatrix;
+      uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+      uniform vec4 lightPosition;
+      uniform vec4 thrusterPosition;
+      uniform float shininess;
+      out vec4 v_color;
+      out vec2 v_texCoord;
+      void main() {
+      v_color = a_color;
+      v_texCoord = a_texCoord;
+      vec3 pos = -(u_modelViewMatrix * a_coords).xyz;
+      vec3 light = (u_modelViewMatrix * lightPosition).xyz;
+      vec3 thruster = (u_modelViewMatrix * thrusterPosition).xyz;
+      vec3 L = normalize( light - pos );
+      vec3 E = normalize( -pos );
+      vec3 H = normalize( L + E );
+      vec4 NN = vec4(a_normals,0);
+      vec3 N = normalize( (u_modelViewMatrix*NN).xyz);
+      vec4 ambient = ambientProduct;
+      float Kd = max( dot(L, N), 0.0 );
+      vec4  diffuse = Kd * diffuseProduct;
+      float Ks = pow( max(dot(N, H), 0.0), shininess );
+      vec4  specular = Ks * specularProduct;
+      if( dot(L, N) < 0.8 ) {
+      specular = vec4(0.0, 0.0, 0.0, 1.0);
+      }
+      vec3 Lt = normalize( thruster - pos );
+      vec4  thrusterDiffuse = max( dot(Lt, N), 0.0 ) * vec4(0.0, 0.0, 1.0, 1.0);
+      gl_Position = u_projectionMatrix * u_modelViewMatrix * a_coords;
+      v_color = ambient + diffuse + specular + thrusterDiffuse;
+      v_color.a = 1.0;
+      }
+    script#fragment-shader(type='x-shader/x-fragment').
+      #version 300 es
+      precision mediump float;
+      in vec2 v_texCoord;
+      in vec4 v_color;
+      out vec4 f_color;
+      uniform sampler2D u_textureMap;
+      uniform float textured;
+      void main() {
+      if (textured >= 0.0)
+      f_color = v_color * texture(u_textureMap, v_texCoord);
+      else
+      f_color = v_color;
+      }
+    // End GLSL 3.0 Shader code
+  body(onload='init();')
+    #container
+      h1 Space Race
+      #second-container
+        #instructions
+          p w: tilt up
+          p a: tilt left
+          p s: tilt down
+          p d: tilt right
+        #canvas-timer
+          p#timer(hidden='') 00:00
+          canvas#gl-canvas(width='650' height='650')
+            | Oops ... your browser doesn't support the HTML5 canvas element
+          #layered-content
+            p#who-won(hidden='')
+            p#finish(hidden='') Finished
+            p#user-time(hidden='')
+            #rules-container
+              p#rules
+                | A rival pilot challenges you—an ambitious new
+                | pilot—to a spaceship race around a nearby planet.
+                br
+                br
+                |                             Go through all the rings and cross the finish line
+                |                             before the rival ship!
+                br
+                br
+                |                             (press space to start)
+      img#volcanoPlanetTex(src='images/Volcanic1024.png' hidden='')
+      img#gasPlanetTex(src='images/Terrestrial2-1024.png' hidden='')
+      img#earthPlanetTex(src='images/Gaseous2-1024.png' hidden='')
+      img#shipTexture(src='images/metalWires512.jpg' hidden='')
+      img#finishLineTex(src='images/finish-line.svg' hidden='')

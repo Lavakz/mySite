@@ -5,13 +5,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+var SpaceGameRouter = require('./routes/SpaceGame');
 var usersRouter = require('./routes/users');
 
+const pug = require('pug');
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,7 +22,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/SpaceRace', SpaceGameRouter);
 app.use('/users', usersRouter);
+
+app.use(button);
+function button (req, res, next) {
+  console.log("button");
+  return res.redirect('/SpaceRace');
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

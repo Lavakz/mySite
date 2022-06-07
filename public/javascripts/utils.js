@@ -686,6 +686,176 @@ function lookAt( eye, n, up )
     return result;
 }
 
+function lookAtNormal( eye, at, up )
+{
+    if ( !Array.isArray(eye) || eye.length != 3) {
+        throw "lookAt(): first parameter [eye] must be an a vec3";
+    }
+
+    if ( !Array.isArray(at) || at.length != 3) {
+        throw "lookAt(): first parameter [at] must be an a vec3";
+    }
+
+    if ( !Array.isArray(up) || up.length != 3) {
+        throw "lookAt(): first parameter [up] must be an a vec3";
+    }
+
+    if ( equal(eye, at) ) {
+        return mat4();
+    }
+
+    var v = normalize( subtract(at, eye) );  // view direction vector
+    var n = normalize( cross(v, up) );       // perpendicular vector
+    var u = normalize( cross(n, v) );        // "new" up vector
+
+    v = negate( v );
+
+    var result = mat4(
+        vec4( n, -dot(n, eye) ),
+        vec4( u, -dot(u, eye) ),
+        vec4( v, -dot(v, eye) ),
+        vec4()
+    );
+
+    return result;
+}
+
+function inverse4(m)
+{
+    var a = mat4();
+    var d = det4(m);
+
+    var a00 = [
+       vec3(m[1][1], m[1][2], m[1][3]),
+       vec3(m[2][1], m[2][2], m[2][3]),
+       vec3(m[3][1], m[3][2], m[3][3])
+    ];
+    var a01 = [
+       vec3(m[1][0], m[1][2], m[1][3]),
+       vec3(m[2][0], m[2][2], m[2][3]),
+       vec3(m[3][0], m[3][2], m[3][3])
+    ];
+    var a02 = [
+       vec3(m[1][0], m[1][1], m[1][3]),
+       vec3(m[2][0], m[2][1], m[2][3]),
+       vec3(m[3][0], m[3][1], m[3][3])
+    ];
+    var a03 = [
+       vec3(m[1][0], m[1][1], m[1][2]),
+       vec3(m[2][0], m[2][1], m[2][2]),
+       vec3(m[3][0], m[3][1], m[3][2])
+    ];
+    var a10 = [
+       vec3(m[0][1], m[0][2], m[0][3]),
+       vec3(m[2][1], m[2][2], m[2][3]),
+       vec3(m[3][1], m[3][2], m[3][3])
+    ];
+    var a11 = [
+       vec3(m[0][0], m[0][2], m[0][3]),
+       vec3(m[2][0], m[2][2], m[2][3]),
+       vec3(m[3][0], m[3][2], m[3][3])
+    ];
+    var a12 = [
+       vec3(m[0][0], m[0][1], m[0][3]),
+       vec3(m[2][0], m[2][1], m[2][3]),
+       vec3(m[3][0], m[3][1], m[3][3])
+    ];
+    var a13 = [
+       vec3(m[0][0], m[0][1], m[0][2]),
+       vec3(m[2][0], m[2][1], m[2][2]),
+       vec3(m[3][0], m[3][1], m[3][2])
+    ];
+    var a20 = [
+       vec3(m[0][1], m[0][2], m[0][3]),
+       vec3(m[1][1], m[1][2], m[1][3]),
+       vec3(m[3][1], m[3][2], m[3][3])
+    ];
+    var a21 = [
+       vec3(m[0][0], m[0][2], m[0][3]),
+       vec3(m[1][0], m[1][2], m[1][3]),
+       vec3(m[3][0], m[3][2], m[3][3])
+    ];
+    var a22 = [
+       vec3(m[0][0], m[0][1], m[0][3]),
+       vec3(m[1][0], m[1][1], m[1][3]),
+       vec3(m[3][0], m[3][1], m[3][3])
+    ];
+    var a23 = [
+       vec3(m[0][0], m[0][1], m[0][2]),
+       vec3(m[1][0], m[1][1], m[1][2]),
+       vec3(m[3][0], m[3][1], m[3][2])
+    ];
+
+    var a30 = [
+       vec3(m[0][1], m[0][2], m[0][3]),
+       vec3(m[1][1], m[1][2], m[1][3]),
+       vec3(m[2][1], m[2][2], m[2][3])
+    ];
+    var a31 = [
+       vec3(m[0][0], m[0][2], m[0][3]),
+       vec3(m[1][0], m[1][2], m[1][3]),
+       vec3(m[2][0], m[2][2], m[2][3])
+    ];
+    var a32 = [
+       vec3(m[0][0], m[0][1], m[0][3]),
+       vec3(m[1][0], m[1][1], m[1][3]),
+       vec3(m[2][0], m[2][1], m[2][3])
+    ];
+    var a33 = [
+       vec3(m[0][0], m[0][1], m[0][2]),
+       vec3(m[1][0], m[1][1], m[1][2]),
+       vec3(m[2][0], m[2][1], m[2][2])
+    ];
+
+
+
+   a[0][0] = det3(a00)/d;
+   a[0][1] = -det3(a10)/d;
+   a[0][2] = det3(a20)/d;
+   a[0][3] = -det3(a30)/d;
+   a[1][0] = -det3(a01)/d;
+   a[1][1] = det3(a11)/d;
+   a[1][2] = -det3(a21)/d;
+   a[1][3] = det3(a31)/d;
+   a[2][0] = det3(a02)/d;
+   a[2][1] = -det3(a12)/d;
+   a[2][2] = det3(a22)/d;
+   a[2][3] = -det3(a32)/d;
+   a[3][0] = -det3(a03)/d;
+   a[3][1] = det3(a13)/d;
+   a[3][2] = -det3(a23)/d;
+   a[3][3] = det3(a33)/d;
+
+   return a;
+}
+
+function det4(m)
+{
+     var m0 = [
+         vec3(m[1][1], m[1][2], m[1][3]),
+         vec3(m[2][1], m[2][2], m[2][3]),
+         vec3(m[3][1], m[3][2], m[3][3])
+     ];
+     var m1 = [
+         vec3(m[1][0], m[1][2], m[1][3]),
+         vec3(m[2][0], m[2][2], m[2][3]),
+         vec3(m[3][0], m[3][2], m[3][3])
+     ];
+     var m2 = [
+         vec3(m[1][0], m[1][1], m[1][3]),
+         vec3(m[2][0], m[2][1], m[2][3]),
+         vec3(m[3][0], m[3][1], m[3][3])
+     ];
+     var m3 = [
+         vec3(m[1][0], m[1][1], m[1][2]),
+         vec3(m[2][0], m[2][1], m[2][2]),
+         vec3(m[3][0], m[3][1], m[3][2])
+     ];
+     return m[0][0]*det3(m0) - m[0][1]*det3(m1)
+         + m[0][2]*det3(m2) - m[0][3]*det3(m3);
+
+}
+
 function perspective( fovy, aspect, near, far )
 {
     var f = 1.0 / Math.tan( radians(fovy) / 2 );

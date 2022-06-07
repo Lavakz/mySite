@@ -1,4 +1,8 @@
 {
     "appService.defaultWebAppToDeploy": "/subscriptions/698b480d-d4a9-4ddd-81d2-24c2af4517bd/resourceGroups/HeideTower_group/providers/Microsoft.Web/sites/RaceSpace",
-    "appService.deploySubpath": "."
+    "appService.deploySubpath": ".",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
 }

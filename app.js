@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
   res.render('index');
 })
 
+app.get('/cube', (req, res) => {
+  res.render('cube');
+})
+
 app.get('/SpaceRace', (req, res) => {
   res.render('SpaceRace');
 })

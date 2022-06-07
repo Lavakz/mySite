@@ -4,10 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var SpaceGameRouter = require('./routes/SpaceGame');
-var usersRouter = require('./routes/users');
-
 const pug = require('pug');
 var app = express();
 
@@ -21,15 +17,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/SpaceRace', SpaceGameRouter);
-app.use('/users', usersRouter);
+app.get('/', (req, res) => {
+  res.render('index');
+})
 
-app.use(button);
-function button (req, res, next) {
-  console.log("button");
-  return res.redirect('/SpaceRace');
-}
+app.get('/SpaceRace', (req, res) => {
+  res.render('SpaceRace');
+})
+
+app.get('/compositions', (req, res) => {
+  res.render('compositions');
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

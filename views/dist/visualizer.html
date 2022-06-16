@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Visualizer</title>
+    <meta name="description" content="Butterchurn Demo Example">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script type="text/javascript" src="../dist/butterchurn.js"></script>-->
+    <script type="text/javascript" src="https://unpkg.com/lodash"></script>
+    <script type="text/javascript" src="https://unpkg.com/butterchurn"></script>
+    <script type="text/javascript" src="https://unpkg.com/butterchurn-presets"></script>
+    <script type="text/javascript" src="https://unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="javascripts/visualizer.js"></script>
+    <style>
+      #canvas:-moz-full-screen {
+      width: 100%;
+      height: 100%;
+      }
+      #canvas:-webkit-full-screen {
+      width: 100%;
+      height: 100%;
+      }
+      #canvas:-ms-fullscreen {
+      width: 100%;
+      height: 100%;
+      }
+      #canvas:fullscreen {
+      width: 100%;
+      height: 100%;
+      }
+      #presetSelect {
+      max-width: 300px;
+      }
+      #presetCycleLength {
+      width: 50px;
+      }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
+  </head>
+  <body>
+    <div id="mainWrapper">
+      <div id="audioSelectWrapper">
+        <div id="localFileBut"><span>Load local files</span></div>
+      </div>
+      <div id="presetControls">
+        <div>Preset: 
+          <select id="presetSelect"></select>
+        </div>
+        <div>Cycle: 
+          <input id="presetCycle" type="checkbox" checked="">
+          <input id="presetCycleLength" type="number" step="1" value="15" min="1">
+        </div>
+        <div>Random: 
+          <input id="presetRandom" type="checkbox" checked="">
+        </div>
+      </div>
+      <canvas id="canvas" style="width:100%;height:100%;"></canvas>
+    </div>
+  </body>
+</html>

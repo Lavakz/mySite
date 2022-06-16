@@ -33,6 +33,10 @@ app.get('/compositions', (req, res) => {
   res.render('compositions');
 })
 
+app.get('/visualizer', (req, res) => {
+  res.render('visualizer');
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

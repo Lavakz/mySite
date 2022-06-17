@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const pug = require('pug');
+const { Console } = require('console');
 var app = express();
 
 // view engine setup

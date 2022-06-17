@@ -63,6 +63,18 @@ function loadLocalFiles(files, index = 0) {
   var file = files[index];
   reader.readAsArrayBuffer(file);
 }
+function loadHostedFile(src){
+  var reader = new FileReader();
+  reader.onload = (event) => {
+    audioContext.decodeAudioData(
+      event.target.result,
+      (buf) => {playBufferSource(buf);}
+    );
+  }
+  fetch(src)
+    .then(res => res.blob())
+    .then(blob => {reader.readAsArrayBuffer(blob);})
+}
 function nextPreset(blendTime = 5.7) {
   presetIndexHist.push(presetIndex);
   var numPresets = presetKeys.length;
@@ -123,11 +135,14 @@ $("#localFileBut").click(function () {
   var fileSelector = $('<input type="file" accept="audio/*" multiple />');
   fileSelector[0].onchange = function (event) {
     loadLocalFiles(fileSelector[0].files);
+    console.log(fileSelector[0].files);
   }
   fileSelector.click();
 });
+$("#play").click(function () {
+  loadHostedFile(document.getElementById('songs').value);
+});
 function initPlayer() {
-  console.log("initPlayer");
   audioContext = new AudioContext();
   presets = {};
   if (window.butterchurnPresets) {
@@ -148,7 +163,7 @@ function initPlayer() {
   }
   visualizer = butterchurn.default.createVisualizer(audioContext, canvas, {
     width: 800,
-    height: 600,
+    height: 800,
     pixelRatio: window.devicePixelRatio || 1,
     textureRatio: 1,
   });

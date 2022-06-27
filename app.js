@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const fs = require('fs');
 const pug = require('pug');
 const { Console } = require('console');
 var app = express();
@@ -30,12 +31,11 @@ app.get('/SpaceRace', (req, res) => {
   res.render('SpaceRace');
 })
 
-app.get('/compositions', (req, res) => {
-  res.render('compositions');
-})
-
-app.get('/visualizer', (req, res) => {
-  res.render('visualizer');
+app.get('/music', (req, res) => {
+  const fs = require('fs'); 
+  res.render('music', {
+    filenames: fs.readdirSync('public/music')
+  });
 })
 
 // catch 404 and forward to error handler

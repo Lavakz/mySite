@@ -105,7 +105,7 @@ window.onload = (function () {
     }
 
     function setPreset(presetIndex) {
-        visualizer.loadPreset(presets[presetKeys[presetIndex]], 0.0);
+        
     }
 
     function addSongs(filenames) {
@@ -120,9 +120,24 @@ window.onload = (function () {
       });
     }
 
+    function setPreset(currentSong) {
+      console.log(currentSong);
+      presetIndex = 10;
+      if (currentSong.includes("Amoeba")) presetIndex = 1; 
+      if (currentSong.includes("Cyclomachine")) presetIndex = 2; 
+      if (currentSong.includes("Darkwraith")) presetIndex = 3; 
+      if (currentSong.includes("Daze")) presetIndex = 4; 
+      if (currentSong.includes("Deep")) presetIndex = 7; 
+
+      console.log(presetIndex);
+      visualizer.loadPreset(presets[presetKeys[presetIndex]], 0.0);
+    }
+
     ap.on('play', function () {
         ap.pause()
-        loadHostedFile(ap.audio.src);
+        currentSong = ap.audio.src;
+        setPreset(currentSong)
+        loadHostedFile(currentSong);
     });
 
     initPlayer()

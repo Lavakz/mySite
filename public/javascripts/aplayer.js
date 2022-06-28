@@ -2,7 +2,7 @@ const ap = new APlayer({
     container: document.getElementById('aplayer'),
     mini: false,
     autoplay: false,
-    theme: '#FADFA3',
+    theme: '#230660',
     loop: 'all',
     order: 'random',
     preload: 'auto',
@@ -20,20 +20,24 @@ window.onload = (function () {
     var sourceNode = null;
     var delayedAudible = null;
     var canvas = document.getElementById('canvas');
+    var gl = canvas.getContext('webgl2');
+
     function connectToAudioAnalyzer(sourceNode) {
       if (delayedAudible) {
         delayedAudible.disconnect();
       }
       delayedAudible = audioContext.createDelay();
-      delayedAudible.delayTime.value = 0.26;
+      delayedAudible.delayTime.value = 0.1;
       sourceNode.connect(delayedAudible)
-      delayedAudible.connect(audioContext.destination);
+      //delayedAudible.connect(audioContext.destination);
       visualizer.connectAudio(delayedAudible);
     }
+
     function startRenderer() {
       requestAnimationFrame(() => startRenderer());
       visualizer.render();
     }
+
     function playBufferSource(buffer) {
       if (!rendering) {
         rendering = true;
@@ -98,14 +102,12 @@ window.onload = (function () {
         presetKeys = _.keys(presets);
         presetIndex = Math.floor(Math.random() * presetKeys.length);
         visualizer = butterchurn.default.createVisualizer(audioContext, canvas, {
+          width: canvas.width,
+          height: canvas.height,
           pixelRatio: window.devicePixelRatio || 1,
           textureRatio: 1,
         });
         setPreset(10);
-    }
-
-    function setPreset(presetIndex) {
-        
     }
 
     function addSongs(filenames) {
@@ -115,29 +117,38 @@ window.onload = (function () {
           artist: ' ',
           url: '/music/' + file,
           cover: 'cover.jpg',
-          theme: '#ebd0c2'
+          theme: '#230660'
         }]);
       });
     }
 
     function setPreset(currentSong) {
-      console.log(currentSong);
       presetIndex = 10;
+      currentSong = currentSong.toString();
       if (currentSong.includes("Amoeba")) presetIndex = 1; 
       if (currentSong.includes("Cyclomachine")) presetIndex = 2; 
-      if (currentSong.includes("Darkwraith")) presetIndex = 3; 
+      if (currentSong.includes("Darkwraith")) presetIndex = 151; 
       if (currentSong.includes("Daze")) presetIndex = 4; 
       if (currentSong.includes("Deep")) presetIndex = 7; 
-
-      console.log(presetIndex);
+      if (currentSong.includes("Harp")) presetIndex = 147; 
+      if (currentSong.includes("Protozoa")) presetIndex = 160; 
+      console.log(presetKeys);
+      //presets.forEach((presetKeys) => {
+      //})
       visualizer.loadPreset(presets[presetKeys[presetIndex]], 0.0);
     }
 
     ap.on('play', function () {
-        ap.pause()
-        currentSong = ap.audio.src;
-        setPreset(currentSong)
-        loadHostedFile(currentSong);
+      currentSong = ap.audio.src;
+      setPreset(currentSong)
+      loadHostedFile(currentSong);
+    });
+
+    ap.on('pause', function () {
+      gl.viewport(0, 0,
+        gl.drawingBufferWidth, gl.drawingBufferHeight);
+      gl.clearColor(0.0, 0.5, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
     });
 
     initPlayer()

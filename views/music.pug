@@ -4,24 +4,22 @@ html
     meta(charset='UTF-8')
     meta(http-equiv='X-UA-Compatible' content='IE=edge')
     meta(name='description' content='Made with Butterchurn and APlayer')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    // <script type="text/javascript" src="../dist/butterchurn.js"></script>
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
     script(type='text/javascript' src='https://unpkg.com/lodash')
     script(type='text/javascript' src='https://unpkg.com/butterchurn')
     script(type='text/javascript' src='https://unpkg.com/butterchurn-presets')
     script(type='text/javascript' src='https://unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js')
     script(src='https://code.jquery.com/jquery-3.1.1.min.js' integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous')
-    
-    script(type='text/javascript' src='/javascripts/visualizer.js')
-    
+    link(rel='stylesheet' href='https://unpkg.com/normalize.css/normalize.css')
     link(rel='stylesheet' href='/stylesheets/APlayer.min.css')
     link(rel='stylesheet' href='/stylesheets/music.css')
     link(rel='javascript' href='/javascripts/aplayer.js')
+    link(rel='stylesheet' href='https://unpkg.com/normalize.css/normalize.css')
 
     script(type='text/javascript').
       var filenames = !{JSON.stringify(filenames)};
 body
-  canvas#canvas()
+  canvas#canvas(width= 800 height= 800)
   #aplayer
     script(type='text/javascript' src='/javascripts/APlayer.min.js')
     script(type='text/javascript' src='/javascripts/aplayer.js')
